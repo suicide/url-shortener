@@ -95,3 +95,8 @@ crashlytics-build.properties
 fabric.properties
 
 .idea/
+### https://raw.github.com/github/gitignore/7af8eea00b37b330af2b9de94170f1d6aeafb1f0/Global/Vagrant.gitignore
+
+.vagrant/
+
+

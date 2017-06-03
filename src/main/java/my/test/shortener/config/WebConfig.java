@@ -1,7 +1,6 @@
 package my.test.shortener.config;
 
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.converter.ByteArrayHttpMessageConverter;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
@@ -9,13 +8,17 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupp
 import java.util.List;
 
 /**
- * TODO: Comment
+ * web config
  *
  * @author Patrick Sy (patrick.sy@get-it.us)
  */
 @Configuration
 public class WebConfig extends WebMvcConfigurationSupport {
 
+  /**
+   * disable all other message converters
+   * @param converters
+   */
   @Override
   protected void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
     StringHttpMessageConverter stringConverter = new StringHttpMessageConverter();
