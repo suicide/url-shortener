@@ -3,7 +3,9 @@ package my.test.shortener.config;
 import my.test.shortener.api.v1.CreateController;
 import my.test.shortener.api.v1.LookupController;
 import my.test.shortener.repository.UrlRepository;
+import my.test.shortener.shortening.AlphabetHashing;
 import my.test.shortener.shortening.LocalCountingShortenerService;
+import my.test.shortener.shortening.ShortHashingShortenerService;
 import my.test.shortener.shortening.ShortenerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -43,7 +45,7 @@ public class MainConfig {
 
   @Bean
   public ShortenerService shortenerService() {
-    return new LocalCountingShortenerService(urlRepository);
+    return new ShortHashingShortenerService(new AlphabetHashing(), urlRepository);
   }
 
 }

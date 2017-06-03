@@ -11,9 +11,9 @@ create table shortener.shorturl
 (
   hash varchar(255) not null
     primary key,
-  url varchar(1024) null,
+  url varchar(1024) not null,
   constraint shorturl_url_uindex
   unique (url)
-)
+) CHARACTER SET utf8 COLLATE utf8_bin
 ;
 

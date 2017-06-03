@@ -19,12 +19,25 @@ public interface ShortenerService {
   /**
    * thrown in case the given url is invalid and connect be processed
    */
-  class InvalidUrlException extends RuntimeException {
+  class InvalidUrlException extends ShortenerServiceException {
     public InvalidUrlException(String message) {
       super(message);
     }
 
     public InvalidUrlException(String message, Throwable cause) {
+      super(message, cause);
+    }
+  }
+
+  /**
+   * thrown in case the url could not be shortened
+   */
+  class ShortenerServiceException extends RuntimeException {
+    public ShortenerServiceException(String message) {
+      super(message);
+    }
+
+    public ShortenerServiceException(String message, Throwable cause) {
       super(message, cause);
     }
   }
