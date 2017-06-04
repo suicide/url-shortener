@@ -3,6 +3,7 @@ package my.test.shortener.api.v1;
 import my.test.shortener.shortening.ShortenerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -23,8 +24,11 @@ public class CreateController {
 
   private final ShortenerService shortenerService;
 
-  public CreateController(ShortenerService shortenerService) {
+  private final String baseUri;
+
+  public CreateController(ShortenerService shortenerService, String baseUri) {
     this.shortenerService = shortenerService;
+    this.baseUri = baseUri;
   }
 
   @RequestMapping(method = RequestMethod.POST)
@@ -36,8 +40,13 @@ public class CreateController {
 
     try {
       String idHash = shortenerService.shorten(url);
-      // TODO make URL
-      return new ResponseEntity<>(idHash, HttpStatus.CREATED);
+
+      String redirectUri = baseUri + idHash;
+
+      HttpHeaders headers = new HttpHeaders();
+      headers.add("Location", redirectUri);
+
+      return new ResponseEntity<>(headers, HttpStatus.CREATED);
 
     } catch (ShortenerService.InvalidUrlException e) {
       LOGGER.debug("The given url {} could not be processed", url, e);

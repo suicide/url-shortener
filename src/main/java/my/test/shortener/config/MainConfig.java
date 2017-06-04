@@ -3,10 +3,7 @@ package my.test.shortener.config;
 import my.test.shortener.api.v1.CreateController;
 import my.test.shortener.api.v1.LookupController;
 import my.test.shortener.repository.UrlRepository;
-import my.test.shortener.shortening.AlphabetHashing;
-import my.test.shortener.shortening.LocalCountingShortenerService;
-import my.test.shortener.shortening.ShortHashingShortenerService;
-import my.test.shortener.shortening.ShortenerService;
+import my.test.shortener.shortening.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
@@ -40,12 +37,19 @@ public class MainConfig {
 
   @Bean
   public CreateController createController() {
-    return new CreateController(shortenerService());
+    String baseUri = env.getProperty("redirect.baseUri", "http://localhost:8080/");
+
+    return new CreateController(shortenerService(), baseUri);
   }
 
   @Bean
   public ShortenerService shortenerService() {
-    return new ShortHashingShortenerService(new AlphabetHashing(), urlRepository);
+    return new ShortHashingShortenerService(hashing(), urlRepository);
+  }
+
+  @Bean
+  public Hashing hashing() {
+    return new AlphabetHashing();
   }
 
 }

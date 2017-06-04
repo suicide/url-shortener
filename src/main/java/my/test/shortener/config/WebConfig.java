@@ -15,6 +15,8 @@ import java.util.List;
 @Configuration
 public class WebConfig extends WebMvcConfigurationSupport {
 
+  // TODO Error handler
+
   /**
    * disable all other message converters
    * @param converters
