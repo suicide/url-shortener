@@ -3,24 +3,33 @@ package my.test.shortener.shortening;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.DigestUtils;
+import org.springframework.util.StringUtils;
 
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 
 /**
- * TODO: Comment
+ * Performs a MD5 hashing and encodes the data in a cut-off base62 string
  *
  * @author Patrick Sy (patrick.sy@get-it.us)
  */
-public class AlphabetHashing {
+public class AlphabetHashing implements Hashing {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(AlphabetHashing.class);
 
-  private static String ALPHABET = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  private static final String ALPHABET = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
+  @Override
   public String hash(String string, int length) {
+    assert length > 0;
 
-    byte[] bytes = string.getBytes(StandardCharsets.UTF_8);
+    String trimmed = StringUtils.trimWhitespace(string);
+
+    if (!StringUtils.hasText(trimmed)) {
+      throw new EmptyValueException(String.format("Given String %s is empty", string));
+    }
+
+    byte[] bytes = trimmed.getBytes(StandardCharsets.UTF_8);
 
     byte[] hashBytes = DigestUtils.md5Digest(bytes);
 
@@ -38,7 +47,11 @@ public class AlphabetHashing {
       size++;
     }
 
-    return result.toString();
+    String hashedString = result.toString();
+
+    LOGGER.debug("Hashed string {} to {}", trimmed, hashedString);
+
+    return hashedString;
   }
 
 }

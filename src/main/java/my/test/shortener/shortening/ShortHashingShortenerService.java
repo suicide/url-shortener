@@ -17,24 +17,26 @@ public class ShortHashingShortenerService implements ShortenerService {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(ShortHashingShortenerService.class);
 
-  private int hashMinLength = 5;
-  private int hashMaxLength = 22;
+  private static final int HASH_MIN_LENGTH = 5;
+  private static final int HASH_MAX_LENGTH = 22;
 
-  private AlphabetHashing hashing;
+  private Hashing hashing;
 
   private UrlRepository urlRepository;
 
-  public ShortHashingShortenerService(AlphabetHashing hashing, UrlRepository urlRepository) {
+  public ShortHashingShortenerService(Hashing hashing, UrlRepository urlRepository) {
     this.hashing = hashing;
     this.urlRepository = urlRepository;
   }
 
   @Override
-  @Transactional
+  @Transactional(rollbackOn = Exception.class)
   public String shorten(String url) {
     // TODO normalize
 
-    for (int length = hashMinLength; length <= hashMaxLength; length++) {
+    // an implementation without a transaction might bring better performance especially if there are a lot of collisions
+
+    for (int length = HASH_MIN_LENGTH; length <= HASH_MAX_LENGTH; length++) {
 
       String hash = hashing.hash(url, length);
 
