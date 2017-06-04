@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 /**
- * TODO: Comment
+ * enable mysql and spring data jpa
  *
  * @author Patrick Sy (patrick.sy@get-it.us)
  */

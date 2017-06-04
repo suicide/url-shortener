@@ -9,7 +9,8 @@ import javax.transaction.Transactional;
 import java.util.Optional;
 
 /**
- * TODO: Comment
+ * creates a short hash off of a given url and tries to insert it into the repository if the url not yet in there.
+ * if there is a hash collision the hash size is extended and it retries to insert the repo.
  *
  * @author Patrick Sy (patrick.sy@get-it.us)
  */
@@ -17,8 +18,8 @@ public class ShortHashingShortenerService implements ShortenerService {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(ShortHashingShortenerService.class);
 
-  private static final int HASH_MIN_LENGTH = 5;
-  private static final int HASH_MAX_LENGTH = 22;
+  static final int HASH_MIN_LENGTH = 5;
+  static final int HASH_MAX_LENGTH = 22;
 
   private Hashing hashing;
 
@@ -53,7 +54,7 @@ public class ShortHashingShortenerService implements ShortenerService {
         }
 
         // collision with another url!
-        LOGGER.info("Hash {} caused a collision for url {}", hash, normalized);
+        LOGGER.info("Hash {} caused a collision for url {} and existing url {}", hash, normalized, existingUrl.get());
 
       } else {
         // insert new url

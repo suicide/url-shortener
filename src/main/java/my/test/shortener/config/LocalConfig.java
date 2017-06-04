@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
 /**
- * TODO: Comment
+ * config for local in-memory repository
  *
  * @author Patrick Sy (patrick.sy@get-it.us)
  */
