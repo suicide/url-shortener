@@ -48,13 +48,13 @@ public class WebConfig extends WebMvcConfigurationSupport {
   public ResponseEntity<Void> defaultErrorHandler(Exception e) throws Exception {
     LOGGER.error("An error occured", e);
 
-    return new ResponseEntity<Void>(HttpStatus.SERVICE_UNAVAILABLE);
+    return new ResponseEntity<>(HttpStatus.SERVICE_UNAVAILABLE);
   }
 
   /**
    * decode form requests in body
    */
-  private class FormMessageConverter extends StringHttpMessageConverter {
+  private static class FormMessageConverter extends StringHttpMessageConverter {
 
     public FormMessageConverter() {
       setSupportedMediaTypes(Collections.singletonList(MediaType.APPLICATION_FORM_URLENCODED));
@@ -67,7 +67,11 @@ public class WebConfig extends WebMvcConfigurationSupport {
 
       String decoded = URLDecoder.decode(result, "UTF-8");
 
-      return decoded.replace("=", "");
+      if (decoded.endsWith("=")) {
+        return decoded.substring(0, decoded.length() - 1);
+      }
+
+      return decoded;
     }
   }
 }
