@@ -22,42 +22,47 @@ public class ShortHashingShortenerService implements ShortenerService {
 
   private Hashing hashing;
 
+  private UrlNormalizer urlNormalizer;
+
   private UrlRepository urlRepository;
 
-  public ShortHashingShortenerService(Hashing hashing, UrlRepository urlRepository) {
+  public ShortHashingShortenerService(Hashing hashing, UrlNormalizer urlNormalizer,
+                                      UrlRepository urlRepository) {
     this.hashing = hashing;
+    this.urlNormalizer = urlNormalizer;
     this.urlRepository = urlRepository;
   }
 
   @Override
   @Transactional(rollbackOn = Exception.class)
   public String shorten(String url) {
-    // TODO normalize
+    String normalized = urlNormalizer.normalize(url);
 
-    // an implementation without a transaction might bring better performance especially if there are a lot of collisions
+    // an implementation without a transaction might bring better db performance especially if there are a lot of
+    // collisions or concurrent inserts
 
     for (int length = HASH_MIN_LENGTH; length <= HASH_MAX_LENGTH; length++) {
 
-      String hash = hashing.hash(url, length);
+      String hash = hashing.hash(normalized, length);
 
       Optional<String> existingUrl = urlRepository.getLongUrl(hash);
       if (existingUrl.isPresent()) {
-        if (existingUrl.get().equals(url)) {
+        if (existingUrl.get().equals(normalized)) {
           // already in repository
           return hash;
         }
 
         // collision with another url!
-        LOGGER.info("Hash {} caused a collision for url {}", hash, url);
+        LOGGER.info("Hash {} caused a collision for url {}", hash, normalized);
 
       } else {
         // insert new url
-        urlRepository.create(new ShortUrl(hash, url));
+        urlRepository.create(new ShortUrl(hash, normalized));
         return hash;
       }
 
     }
-    throw new ShortenerServiceException(String.format("unable to create unique hash for url %s", url));
+    throw new ShortenerServiceException(String.format("unable to create unique hash for url %s", normalized));
   }
 
 }

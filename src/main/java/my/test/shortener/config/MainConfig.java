@@ -44,12 +44,17 @@ public class MainConfig {
 
   @Bean
   public ShortenerService shortenerService() {
-    return new ShortHashingShortenerService(hashing(), urlRepository);
+    return new ShortHashingShortenerService(hashing(), urlNormalizer(), urlRepository);
   }
 
   @Bean
   public Hashing hashing() {
     return new AlphabetHashing();
+  }
+
+  @Bean
+  public UrlNormalizer urlNormalizer() {
+    return new UriComponentsUrlNormalizer();
   }
 
 }
