@@ -1,6 +1,8 @@
 package my.test.shortener.api.v1;
 
+import my.test.shortener.shortening.Hashing;
 import my.test.shortener.shortening.ShortenerService;
+import my.test.shortener.shortening.UrlNormalizer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -48,7 +50,9 @@ public class CreateController {
 
       return new ResponseEntity<>(headers, HttpStatus.CREATED);
 
-    } catch (ShortenerService.InvalidUrlException e) {
+    } catch (ShortenerService.ShortenerServiceException
+      | UrlNormalizer.InvalidUrlException
+      | Hashing.EmptyValueException e) {
       LOGGER.debug("The given url {} could not be processed", url, e);
 
       return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
