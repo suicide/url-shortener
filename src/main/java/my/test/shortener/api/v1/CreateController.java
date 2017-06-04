@@ -36,8 +36,6 @@ public class CreateController {
   @RequestMapping(method = RequestMethod.POST)
   public ResponseEntity<?> handleCreate(@RequestBody String url) {
 
-    // TODO handle application/x-www-form-urlencoded by decoding?
-
     LOGGER.debug("Handling url {}", url);
 
     try {
